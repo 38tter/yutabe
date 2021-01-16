@@ -7,7 +7,7 @@
     </div>
     <el-form>
       <el-form-item>
-        <textarea v-model="address" placeholder="Input your address"></textarea>
+        <textarea v-model="ingredients" placeholder="Input your ingredients"></textarea>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click.native="fetchRecipes">
@@ -15,18 +15,19 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <el-table
-    current-row-key
-    stripe
-    highlight-current-row>
-      <el-table-column label="レシピ">
-        <template slot-scope="scope">
-          <span v-for="recipe in recipes" :key="recipe" class="spec">
-            {{recipe}}
-          </span>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-row>
+      <el-col :span="8" v-for="recipe in recipes" :key="recipe.title" :offset="2">
+        <el-card :body-style="{ padding: '0px' }">
+          <img :src="recipe.thumbnail" class="image">
+          <div style="padding: 14px;">
+            <span>{{recipe.title}}</span>
+            <div class="bottom clearfix">
+              <el-button type="text" class="button">{{recipe.href}}</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -74,7 +75,9 @@ export default {
     },
     fetchRecipes () {
       const query = this.ingredients
-      this.axios.get('https://recipe-puppy.p.rapidapi.com/?' + query.replace(',', '%2C'), {
+      console.log(query)
+      const url = 'https://recipe-puppy.p.rapidapi.com/?'
+      this.axios.get(url, {
         headers: {
           'X-RapidAPI-Host': 'recipe-puppy.p.rapidapi.com',
           'X-RapidAPI-Key': process.env.VUE_APP_RECIPE_PUPPY_API_KEY,
@@ -86,11 +89,8 @@ export default {
           if (res.status !== 200) {
             throw new Error('response error')
           } else {
-            console.log(res.data)
             res.data.results.forEach((r) => {
-              console.log(r.title)
-              this.recipes.push(r.title)
-              console.log(this.recipes)
+              this.recipes.push(r)
             })
           }
         }
