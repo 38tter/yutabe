@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -35,6 +36,15 @@ func (res *ProductResponse) serialize(rawProduct *Product) {
 	res.Status = rawProduct.Status
 }
 
+type UserAddress struct {
+	ID      int    `gorm:"priamry_key;not null"`
+	Address string `gorm:"type:varchar(200);not null"`
+}
+
+type SaveAddressRequest struct {
+	Address string `json:"address"`
+}
+
 func quadkeyString(t maptile.Tile) string {
 	s := strconv.FormatInt(int64(t.Quadkey()), 4)
 
@@ -61,13 +71,25 @@ func main() {
 		}
 		ctx.JSON(http.StatusOK, productResponse)
 	})
+	router.POST("/api/address", func(ctx *gin.Context) {
+		req := ctx.Request
+		if req == nil || req.Body == nil {
+			fmt.Errorf("invalid request")
+			return
+		}
+		var obj SaveAddressRequest
+		if err := json.NewDecoder(req.Body).Decode(&obj); err != nil {
+			fmt.Errorf("failed to decode")
+		}
+		u := UserAddress{Address: obj.Address}
+		saveUserAddress(&u)
+	})
 
 	user := router.Group("/User")
 	{
 		user.POST("/signup", routes.UserSignUp)
 	}
 	fmt.Printf("connect to db")
-	connectDB()
 
 	_ = Product{
 		ProductName: "ラーメン",
@@ -77,17 +99,6 @@ func main() {
 	//saveProduct(&p)
 
 	router.Run(":8081")
-}
-
-func SaveShop() {
-
-}
-
-type Product struct {
-	ID          int    `gorm:"primary_key;not null"`
-	ProductName string `gorm:"type:varchar(200);not null"`
-	Memo        string `gorm:"type:varchar(400)"`
-	Status      string `gorm:"type:char(2);not null"`
 }
 
 func connectDB() *gorm.DB {
@@ -105,6 +116,19 @@ func connectDB() *gorm.DB {
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.LogMode(true)
 	db.AutoMigrate(&Product{})
+	db.AutoMigrate(&UserAddress{})
 	fmt.Println("db connected: ", &db)
 	return db
+}
+
+func saveProduct(p *Product) {
+	db := connectDB()
+	db.Create(&p)
+	defer db.Close()
+}
+
+func saveUserAddress(u *UserAddress) {
+	db := connectDB()
+	db.Create(&u)
+	defer db.Close()
 }
