@@ -5,10 +5,16 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import ElementUI from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/ja'
+import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/display.css'
 
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
+
+Vue.use(ElementUI, { locale })
 
 /* eslint-disable no-new */
 new Vue({
