@@ -35,7 +35,7 @@ export default {
 
   methods: {
     fetchProducts () {
-      this.axios.get('/products').then(
+      this.axios.get('http://localhost:8081/api/products').then(
         res => {
           if (res.status !== 200) {
             throw new Error('response error')
