@@ -14,6 +14,7 @@ func main() {
 	router.Use(cors.Default())
 
 	router.GET("/api/products", usecase.GetProducts)
+	router.POST("/api/recipe", usecase.SaveRecipes)
 
 	user := router.Group("/User")
 	{
