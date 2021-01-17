@@ -32,7 +32,16 @@
               <el-button type="text" class="button">{{recipe.href}}</el-button>
             </div>
             <div>
-              <router-link :to="{name:'recipe',params:{name:recipe.name,img:recipe.thumbnail_url,description:recipe.description,sections:recipe.sections,instructions:recipe.instructions}}" class="button">detail</router-link>
+              <router-link :to="{
+                name: 'recipe',
+                params: {
+                  name: recipe.name,
+                  img: recipe.thumbnail_url,
+                  description:recipe.description,
+                  sections:recipe.sections,
+                  instructions:recipe.instructions,
+                  hasItems: hasItems
+                }}" class="button">detail</router-link>
             </div>
           </div>
         </el-card>
@@ -53,6 +62,7 @@ export default {
       address: '',
       ingredients: '',
       recipes: [],
+      hasItems: {},
       isLoading: false,
       fullPage: true
     }
@@ -118,6 +128,7 @@ export default {
             res.data.results.forEach((r) => {
               this.recipes.push(r)
               this.saveRecipes(r)
+              this.checkItems(r)
             })
             this.isLoading = false
           }
@@ -126,6 +137,16 @@ export default {
     },
     clearRecipes () {
       this.recipes = []
+    },
+    checkItems (recipe) {
+      recipe.sections.forEach((s) => {
+        s.components.forEach((c) => {
+          let item = c['ingredient']['name']
+          // console.log(item)
+          this.hasItems[item] = this.ingredients.includes(item)
+          // console.log(this.hasItems[item])
+        })
+      })
     },
     saveRecipes (recipe) {
       let texts = []

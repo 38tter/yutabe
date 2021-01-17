@@ -4,7 +4,7 @@
     <img :src="$route.params.img" width="100%">
     <h2>ingredients</h2>
     <div v-for="(section,idx) in $route.params.sections" :key="idx">
-      <div v-for="component in section.components" :key="component.id">
+      <div v-for="component in section.components" :key="component.id" :style="{color: changeColor($route.params.hasItems[component.ingredient.name])}">
         {{component.raw_text}}
       </div>
     </div>
@@ -23,6 +23,14 @@ export default {
     name: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    changeColor (hasItem) {
+      if (!hasItem) {
+        return 'red'
+      }
+      return 'black'
     }
   }
 }
