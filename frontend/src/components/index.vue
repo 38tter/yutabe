@@ -132,6 +132,12 @@ export default {
       recipe.instructions.forEach((instruction) => {
         texts.push(instruction.display_text)
       })
+      let ingredients = []
+      recipe.sections.forEach((s) => {
+        s.components.forEach((c) => {
+          ingredients.push({'name': c['ingredient']['name']})
+        })
+      })
       const message = {
         'name': recipe.name,
         'image_url': recipe.thumbnail_url,
@@ -139,7 +145,8 @@ export default {
         'tasty_id': recipe.id,
         'instruction': {
           'texts': texts
-        }
+        },
+        'ingredients': ingredients
       }
       let messageJson = JSON.stringify(message)
       return this.axios.post('http://localhost:8081/api/recipe', messageJson).then(res => {
