@@ -15,6 +15,7 @@ func main() {
 
 	router.GET("/api/products", usecase.GetProducts)
 	router.POST("/api/recipe", usecase.SaveRecipes)
+	router.GET("/api/market", usecase.UseWebDriver)
 
 	user := router.Group("/User")
 	{

@@ -6,6 +6,7 @@
     <div v-for="(section,idx) in $route.params.sections" :key="idx">
       <div v-for="component in section.components" :key="component.id" :style="{color: changeColor($route.params.hasItems[component.ingredient.name])}">
         {{component.raw_text}}
+        <el-button @click.native="buyItem(component)" v-if="!($route.params.hasItems[component.ingredient.name])">Buy</el-button>
       </div>
     </div>
     <h2>instructions</h2>
@@ -31,6 +32,14 @@ export default {
         return 'red'
       }
       return 'black'
+    },
+    buyItem (component) {
+      let item = component.ingredient.name
+      return this.axios.get('http://localhost:8081/api/market?item=' + item).then(res => {
+        if (res.status !== 200) {
+          throw new Error('failed to send get request')
+        }
+      }).catch(err => Promise.reject(err))
     }
   }
 }
