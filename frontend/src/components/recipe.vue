@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{$route.params.name}}</h1>
-    <img :src="$route.params.img" width="100%">
+    <img :src="$route.params.img" width="800px" height="600px" class="image">
     <h2>ingredients</h2>
     <div v-for="(section,idx) in $route.params.sections" :key="idx">
       <div v-for="component in section.components" :key="component.id" :style="{color: changeColor($route.params.hasItems[component.ingredient.name])}">
@@ -46,5 +46,7 @@ export default {
 </script>
 
 <style scoped>
-
+.image {
+  object-fit: cover;
+}
 </style>
