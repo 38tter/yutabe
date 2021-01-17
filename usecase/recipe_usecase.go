@@ -16,8 +16,6 @@ func SaveRecipes(ctx *gin.Context) {
 	if err := json.NewDecoder(body).Decode(&recipe); err != nil {
 		fmt.Printf("failed to save recipes: %s", err)
 	}
-	fmt.Printf("recipe = %#v \n", recipe)
-	fmt.Printf("instruction = %#v \n", recipe.Instruction)
 
 	var texts []models.InstructionText
 	for _, t := range recipe.Instruction.Texts {
@@ -27,6 +25,7 @@ func SaveRecipes(ctx *gin.Context) {
 		Name:        recipe.Name,
 		ImageUrl:    recipe.ImageUrl,
 		Description: recipe.Description,
+		TastyID:     recipe.TastyID,
 		Instruction: &models.Instruction{
 			Texts: texts,
 		},
