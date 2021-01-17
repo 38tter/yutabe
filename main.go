@@ -36,22 +36,6 @@ func (res *ProductResponse) serialize(rawProduct *Product) {
 	res.Status = rawProduct.Status
 }
 
-type UserAddress struct {
-	ID      int    `gorm:"priamry_key;not null"`
-	Address string `gorm:"type:varchar(200);not null"`
-}
-
-type SaveAddressRequest struct {
-	Address string `json:"address"`
-}
-
-func quadkeyString(t maptile.Tile) string {
-	s := strconv.FormatInt(int64(t.Quadkey()), 4)
-
-	zeros := "000000000000000000000000000000"
-	return zeros[:((int(t.Z)+1)-len(s))/2] + s
-}
-
 func main() {
 	router := gin.Default()
 	router.Use(cors.Default())
