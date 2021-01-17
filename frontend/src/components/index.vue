@@ -23,8 +23,8 @@
     </el-form>
     <el-row>
       <el-col :span="8" v-for="recipe in recipes" :key="recipe.name" :offset="2">
-        <el-card :body-style="{ padding: '0px' }">
-          <img :src="recipe.thumbnail_url" class="image" width="75%">
+        <el-card shaped :body-style="{ padding: '0px' }">
+          <img :src="recipe.thumbnail_url" class="image" width="400px" height="300px">
           <div style="padding: 14px;">
             <span>{{recipe.name}}</span>
             <span>{{recipe.keywords}}</span>
@@ -112,7 +112,7 @@ export default {
     },
     fetchRecipes () {
       this.clearRecipes()
-      const url = 'https://tasty.p.rapidapi.com/recipes/list?tags=under_30_minutes&q=' + this.ingredients + '&from=0&size=2'
+      const url = 'https://tasty.p.rapidapi.com/recipes/list?tags=under_30_minutes&q=' + this.ingredients + '&from=0&size=20'
       this.axios.get(url, {
         headers: {
           'X-RapidAPI-Host': 'tasty.p.rapidapi.com',
@@ -189,5 +189,7 @@ export default {
 </script>
 
 <style scoped>
-
+.image {
+  object-fit: cover
+}
 </style>
