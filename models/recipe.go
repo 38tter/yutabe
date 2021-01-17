@@ -9,7 +9,7 @@ type Recipe struct {
 	Description string `gorm:"varchar(100);not null"`
 	TastyID     int    `gorm:"int;not null"`
 	Instruction *Instruction
-	ingredients []*Ingredient
+	Ingredients []*Ingredient
 	//rate         float64 `gorm:"varchar(100);not null"`
 	//utritions    []*Nutrition
 }

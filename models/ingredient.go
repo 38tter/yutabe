@@ -10,5 +10,5 @@ type Ingredient struct {
 
 type IngredientJson struct {
 	gorm.Model
-	Name string `gorm:"varchar(50);not null"`
+	Name string `json:"name"`
 }

@@ -21,6 +21,10 @@ func SaveRecipes(ctx *gin.Context) {
 	for _, t := range recipe.Instruction.Texts {
 		texts = append(texts, models.InstructionText{Text: t})
 	}
+	var ingredients []*models.Ingredient
+	for _, i := range recipe.Ingredients {
+		ingredients = append(ingredients, &models.Ingredient{Name: i.Name})
+	}
 	r := models.Recipe{
 		Name:        recipe.Name,
 		ImageUrl:    recipe.ImageUrl,
@@ -29,6 +33,7 @@ func SaveRecipes(ctx *gin.Context) {
 		Instruction: &models.Instruction{
 			Texts: texts,
 		},
+		Ingredients: ingredients,
 	}
 	infrastructure.SaveRecipe(&r)
 
