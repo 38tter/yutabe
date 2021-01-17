@@ -5,6 +5,7 @@ import (
 
 	"github.com/38tter/yutabe/models"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func ConnectDB() *gorm.DB {
@@ -22,6 +23,10 @@ func ConnectDB() *gorm.DB {
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.LogMode(true)
 	db.AutoMigrate(&models.Product{})
+	db.AutoMigrate(&models.Ingredient{})
+	db.AutoMigrate(&models.Instruction{})
+	db.AutoMigrate(&models.InstructionText{})
+	db.AutoMigrate(&models.Recipe{})
 	fmt.Println("db connected: ", &db)
 	return db
 }
