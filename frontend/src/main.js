@@ -9,6 +9,7 @@ import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/ja'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 Vue.config.productionTip = false
 

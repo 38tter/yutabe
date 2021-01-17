@@ -10,7 +10,13 @@
         <textarea type="textarea" :rows="2" v-model="ingredients" placeholder="Input your ingredients" width="100%"></textarea>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click.native="fetchRecipes">
+        <loading
+        :active.sync="isLoading"
+        :can-cancel="true"
+        :on-cancel="onCancel"
+        :is-full-page="fullPage"
+        ></loading>
+        <el-button type="primary" @click.native="fetchRecipes" @click.prevent="doAjax">
           送信
         </el-button>
       </el-form-item>
@@ -37,6 +43,8 @@
 
 <script>
 
+import Loading from 'vue-loading-overlay'
+
 export default {
   name: 'index',
   data: function () {
@@ -44,8 +52,14 @@ export default {
       products: [],
       address: '',
       ingredients: '',
-      recipes: []
+      recipes: [],
+      isLoading: false,
+      fullPage: true
     }
+  },
+
+  components: {
+    'loading': Loading
   },
 
   computed: {
@@ -59,6 +73,16 @@ export default {
   },
 
   methods: {
+    doAjax () {
+      this.isLoading = true
+      setTimeout(function () {
+        this.isLoading = false
+        console.log('load off')
+      }, 1000)
+    },
+    onCancel () {
+      console.log('User cancelled the loader.')
+    },
     fetchProducts () {
       this.axios.get('http://localhost:8081/api/products').then(
         res => {
@@ -93,13 +117,36 @@ export default {
           } else {
             res.data.results.forEach((r) => {
               this.recipes.push(r)
+              this.saveRecipes(r)
             })
+            this.isLoading = false
           }
         }
       )
     },
     clearRecipes () {
       this.recipes = []
+    },
+    saveRecipes (recipe) {
+      let texts = []
+      recipe.instructions.forEach((instruction) => {
+        texts.push(instruction.display_text)
+      })
+      const message = {
+        'name': recipe.name,
+        'image_url': recipe.thumbnail_url,
+        'description': recipe.description,
+        'tasty_id': recipe.id,
+        'instruction': {
+          'texts': texts
+        }
+      }
+      let messageJson = JSON.stringify(message)
+      return this.axios.post('http://localhost:8081/api/recipe', messageJson).then(res => {
+        if (res.status !== 201) {
+          throw new Error('failed to save recipe')
+        }
+      }).catch(err => Promise.reject(err))
     }
   }
 }
