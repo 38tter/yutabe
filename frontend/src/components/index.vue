@@ -26,7 +26,7 @@
               <el-button type="text" class="button">{{recipe.href}}</el-button>
             </div>
             <div>
-              <router-link :to="{name:'recipe',params:{name:'hoge',img:'fuga',description:'heke'}}" class="button">detail</router-link>
+              <router-link :to="{name:'recipe',params:{name:recipe.name,img:recipe.thumbnail_url,description:recipe.description,sections:recipe.sections,instructions:recipe.instructions}}" class="button">detail</router-link>
             </div>
           </div>
         </el-card>
