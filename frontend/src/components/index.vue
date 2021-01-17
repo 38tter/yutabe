@@ -2,12 +2,12 @@
   <div id="app">
     <div id="header"/>
     <div>
-      <h1>夕ご飯何食べる？（ゆうたべ）</h1>
+      <h1>夕ご飯何作る？（ゆうつく）</h1>
       <h3>食材を入力してください（カンマ区切り）</h3>
     </div>
     <el-form>
       <el-form-item>
-        <textarea v-model="ingredients" placeholder="Input your ingredients"></textarea>
+        <textarea type="textarea" :rows="2" v-model="ingredients" placeholder="Input your ingredients" width="100%"></textarea>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click.native="fetchRecipes">
@@ -16,13 +16,17 @@
       </el-form-item>
     </el-form>
     <el-row>
-      <el-col :span="8" v-for="recipe in recipes" :key="recipe.title" :offset="2">
+      <el-col :span="8" v-for="recipe in recipes" :key="recipe.name" :offset="2">
         <el-card :body-style="{ padding: '0px' }">
-          <img :src="recipe.thumbnail" class="image">
+          <img :src="recipe.thumbnail_url" class="image" width="75%">
           <div style="padding: 14px;">
-            <span>{{recipe.title}}</span>
+            <span>{{recipe.name}}</span>
+            <span>{{recipe.keywords}}</span>
             <div class="bottom clearfix">
               <el-button type="text" class="button">{{recipe.href}}</el-button>
+            </div>
+            <div>
+              <router-link :to="{name:'recipe',params:{name:'hoge',img:'fuga',description:'heke'}}" class="button">detail</router-link>
             </div>
           </div>
         </el-card>
@@ -70,18 +74,16 @@ export default {
       const message = {'address': this.address}
       let messageJson = JSON.stringify(message)
       return this.axios.post('http://localhost:8081/api/address', messageJson).then(res => {
-        console.log(res.status)
       }).catch(err => Promise.reject(err))
     },
     fetchRecipes () {
-      const query = this.ingredients
-      console.log(query)
-      const url = 'https://recipe-puppy.p.rapidapi.com/?'
+      this.clearRecipes()
+      const url = 'https://tasty.p.rapidapi.com/recipes/list?tags=under_30_minutes&q=' + this.ingredients + '&from=0&size=2'
       this.axios.get(url, {
         headers: {
-          'X-RapidAPI-Host': 'recipe-puppy.p.rapidapi.com',
-          'X-RapidAPI-Key': process.env.VUE_APP_RECIPE_PUPPY_API_KEY,
-          'useQueryString': true
+          'X-RapidAPI-Host': 'tasty.p.rapidapi.com',
+          'X-RapidAPI-Key': process.env.VUE_APP_TASTY_API_KEY,
+          'useQueryString': 'useQueryString'
         },
         data: {}
       }).then(
@@ -95,6 +97,9 @@ export default {
           }
         }
       )
+    },
+    clearRecipes () {
+      this.recipes = []
     }
   }
 }
