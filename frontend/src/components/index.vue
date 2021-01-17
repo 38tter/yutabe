@@ -139,26 +139,34 @@ export default {
       this.recipes = []
     },
     checkItems (recipe) {
-      recipe.sections.forEach((s) => {
-        s.components.forEach((c) => {
-          let item = c['ingredient']['name']
-          // console.log(item)
-          this.hasItems[item] = this.ingredients.includes(item)
-          // console.log(this.hasItems[item])
+      if (recipe.sections) {
+        recipe.sections.forEach((s) => {
+          if (s.components) {
+            s.components.forEach((c) => {
+              let item = c['ingredient']['name']
+              this.hasItems[item] = this.ingredients.includes(item)
+            })
+          }
         })
-      })
+      }
     },
     saveRecipes (recipe) {
       let texts = []
-      recipe.instructions.forEach((instruction) => {
-        texts.push(instruction.display_text)
-      })
-      let ingredients = []
-      recipe.sections.forEach((s) => {
-        s.components.forEach((c) => {
-          ingredients.push({'name': c['ingredient']['name']})
+      if (recipe.instructions) {
+        recipe.instructions.forEach((instruction) => {
+          texts.push(instruction.display_text)
         })
-      })
+      }
+      let ingredients = []
+      if (recipe.sections) {
+        recipe.sections.forEach((s) => {
+          if (s.components) {
+            s.components.forEach((c) => {
+              ingredients.push({'name': c['ingredient']['name']})
+            })
+          }
+        })
+      }
       const message = {
         'name': recipe.name,
         'image_url': recipe.thumbnail_url,
