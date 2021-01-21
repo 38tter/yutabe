@@ -144,7 +144,10 @@ export default {
           if (s.components) {
             s.components.forEach((c) => {
               let item = c['ingredient']['name']
-              this.hasItems[item] = this.ingredients.includes(item)
+              this.ingredients.split(',').forEach((ingredient) => {
+                let regexp = new RegExp('.*%s'.replace('%s', ingredient))
+                this.hasItems[item] = !!item.match(regexp)
+              })
             })
           }
         })
