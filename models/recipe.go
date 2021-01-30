@@ -4,10 +4,10 @@ import "github.com/jinzhu/gorm"
 
 type Recipe struct {
 	gorm.Model
-	Name        string `gorm:"varchar(100);not null"`
+	Name        string `gorm:"varchar(100);not null;index:recipe_index,unique"`
 	ImageUrl    string `gorm:"varchar(100);not null"`
-	Description string `gorm:"varchar(100);not null"`
-	TastyID     int    `gorm:"int;not null"`
+	Description string `gorm:"varchar(100);not null;index:recipe_index,unique"`
+	TastyID     int    `gorm:"int;not null;index:recipe_index,unique"`
 	Instruction *Instruction
 	Ingredients []*Ingredient
 	//rate         float64 `gorm:"varchar(100);not null"`
