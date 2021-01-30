@@ -22,7 +22,6 @@ func ConnectDB() *gorm.DB {
 
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.LogMode(true)
-	db.AutoMigrate(&models.Product{})
 	db.AutoMigrate(&models.Ingredient{})
 	db.AutoMigrate(&models.Instruction{})
 	db.AutoMigrate(&models.InstructionText{})
